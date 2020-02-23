@@ -1,3 +1,5 @@
+#pragma once
+
 class Texture_Material
 {
 private:

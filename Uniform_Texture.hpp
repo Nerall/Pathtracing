@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Texture_Material.hpp"
 
 class Uniform_Texture: public Texture_Material

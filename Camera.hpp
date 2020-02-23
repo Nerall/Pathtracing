@@ -1,17 +1,21 @@
+#pragma once
+
 #include "Vector.hpp"
+#include "Object.hpp"
+#include <memory>
 
 class Camera
 {
 private:
     Vector center;
-    Vector direction;
     Vector height;
-    float fov_x;
-    float fov_y;
-    float z_min;
+    float fov;
 
 public:
-    Camera(Vector center, Vector direction, Vector height, float fov_x, float fov_y, float z_min);
+    Camera(Vector center, float fov);
+    Vector get_origin();
+    float get_fov();
+    
     ~Camera();
 };
 

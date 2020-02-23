@@ -1,7 +1,24 @@
 #include "Vector.hpp"
 
+Vector::Vector()
+{}
+
 Vector::Vector(float x, float y, float z): x(x), y(y), z(z)
 {
+}
+
+Vector::Vector(float f)
+{
+    x = f;
+    y = f;
+    z = f;
+}
+
+Vector::Vector(Vector const& v)
+{
+    x = v.x;
+    y = v.y;
+    z = v.z;
 }
 
 Vector::~Vector()
@@ -30,9 +47,9 @@ Vector Vector::operator-(Vector const &rhs)
 
 Vector Vector::operator*(float scalar)
 {
-    this->x *scalar;
-    this->y *scalar;
-    this->z *scalar;
+    this->x *= scalar;
+    this->y *= scalar;
+    this->z *= scalar;
     return *this;
 }
 
@@ -51,7 +68,22 @@ float Vector::norm()
     return sqrt(dot_product(*this));
 }
 
-Vec3 Vector::normalize()
+Vector Vector::normalize()
 {
     return (*this)*(1/norm());
+}
+
+float Vector::get_x()
+{
+    return x;
+}
+
+float Vector::get_y()
+{
+    return y;
+}
+
+float Vector::get_z()
+{
+    return z;
 }

@@ -1,15 +1,22 @@
+#pragma once
+
 #include <vector>
 #include "Vector.hpp"
+#include <iostream>
+#include <fstream>
 
 class Image
 {
 private:
-    int height;
-    int width;
+    std::size_t height;
+    std::size_t width;
     std::vector<std::vector<Vector>> pixels;
 
 public:
-    Image(int height, int width, std::vector<std::vector> pixels);
-    void save_image();
+    Image(std::size_t height, std::size_t width, float fov);
+    std::size_t get_height();
+    std::size_t get_width();
+    std::vector<std::vector<Vector>> get_pixels();
+    void set_pixel(std::size_t i, std::size_t j, Vector v);
     ~Image();
 };

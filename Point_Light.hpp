@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Light.hpp"
 
 class Point_Light: public Light

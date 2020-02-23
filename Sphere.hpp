@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Object.hpp"
 #include "Ray.hpp"
 #include "Vector.hpp"
@@ -9,8 +11,8 @@ private:
     float radius;
 
 public:
-    Sphere(/* args */);
-    ~Sphere();
+    Sphere(Vector color, Vector center, float radius);
+    bool collide(Ray &ray) override;
 };
 
 

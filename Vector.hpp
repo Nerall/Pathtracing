@@ -1,3 +1,5 @@
+#pragma once
+
 #include <cmath>
 #include "Color.hpp"
 
@@ -9,7 +11,10 @@ private:
     float z;
 
 public:
+    Vector();
     Vector(float x, float y, float z);
+    Vector(float f);
+    Vector(Vector const &v);
     float magnitude();
     Vector unit_vector();
     Vector operator+(Vector const &rhs);
@@ -18,7 +23,10 @@ public:
     float dot_product(Vector const &rhs);
     Vector cross_product(Vector const &rhs);
     float norm();
-    Vec3 normalize();
+    Vector normalize();
+    float get_x();
+    float get_y();
+    float get_z();
     ~Vector();
 };
 
