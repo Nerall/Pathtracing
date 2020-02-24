@@ -42,12 +42,13 @@ void Scene::save_image()
     {
         for (size_t j = 0; j < width; j++)
         {
-            auto r = pixels[i][j].get_x(); 
-            auto g = pixels[i][j].get_y(); 
-            auto b = pixels[i][j].get_z(); 
+            char r = (char)pixels[i][j].get_x(); 
+            char g = (char)pixels[i][j].get_y(); 
+            char b = (char)pixels[i][j].get_z(); 
             ofs << r << g << b;
         }
     }
+    ofs.close();
 }
 
 void Scene::render()
