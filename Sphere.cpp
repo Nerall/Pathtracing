@@ -12,8 +12,10 @@ bool Sphere::collide(Ray &ray)
     auto l = origin - center;
     auto a = direction.dot_product(direction);
     auto b = 2 * direction.dot_product(l);
+    //std::cout << b << "\n";
     auto c = l.dot_product(l) - radius * radius;
     float discriminant = b * b - 4 * a * c;
+    //std::cout << discriminant << "\n";
     if (discriminant < 0)
         return false;
     else if (discriminant == 0)

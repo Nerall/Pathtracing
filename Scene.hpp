@@ -13,18 +13,18 @@ class Scene
 private:
     std::vector<std::shared_ptr<Object>> objects;
     Camera camera;
-    Image image;
+    std::size_t height;
+    std::size_t width;
     std::shared_ptr<Object> hit;
-    std::vector<Vector> buffer;
+    std::vector<std::vector<Vector>> pixels;
 
 public:
-    Scene(std::vector<std::shared_ptr<Object>> objects, Camera camera, Image image);
+    Scene(std::vector<std::shared_ptr<Object>> objects, Camera camera, std::size_t height, std::size_t width);
     bool trace(Ray &ray);
     std::shared_ptr<Object> get_hit();
-    std::vector<Vector> get_buffer();
+    std::vector<std::vector<Vector>> get_pixels();
     Vector cast_ray(Ray &ray);
     void save_image();
-    Image get_image();
     void render();
     ~Scene();
 };

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cmath>
+#include <iostream>
 #include "Color.hpp"
 
 class Vector
@@ -28,6 +29,7 @@ public:
     float get_y();
     float get_z();
     ~Vector();
+    friend std::ostream& operator<<(std::ostream& os, const Vector& v);
 };
 
 

@@ -55,7 +55,7 @@ Vector Vector::operator*(float scalar)
 
 float Vector::dot_product(Vector const &rhs)
 {
-    return this->x * rhs.x + this->y + rhs.y + this->z + rhs.z;
+    return this->x * rhs.x + this->y * rhs.y + this->z * rhs.z;
 }
 
 Vector Vector::cross_product(Vector const &rhs)
@@ -86,4 +86,9 @@ float Vector::get_y()
 float Vector::get_z()
 {
     return z;
+}
+
+std::ostream& operator<<(std::ostream& os, const Vector& v)
+{
+    return os << "( " << v.x << ", " << v.y << ", " << v.z << ")";
 }

@@ -3,6 +3,8 @@
 #include "Object.hpp"
 #include "Ray.hpp"
 #include "Vector.hpp"
+#include <cmath>
+#include <iostream>
 
 class Sphere: public Object
 {

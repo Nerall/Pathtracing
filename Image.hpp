@@ -13,7 +13,7 @@ private:
     std::vector<std::vector<Vector>> pixels;
 
 public:
-    Image(std::size_t height, std::size_t width, float fov);
+    Image(std::size_t height, std::size_t width);
     std::size_t get_height();
     std::size_t get_width();
     std::vector<std::vector<Vector>> get_pixels();
