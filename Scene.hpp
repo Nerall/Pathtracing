@@ -27,7 +27,7 @@ public:
     Scene(std::vector<std::shared_ptr<Object>> objects, Camera camera, std::vector<Point_Light> lights, std::size_t height, std::size_t width);
     bool trace(Ray &ray);
     std::vector<std::vector<Vector>> get_pixels();
-    Vector cast_ray(Ray &ray);
+    Vector cast_ray(Ray &ray, std::size_t depth);
     void save_image();
     void render();
     ~Scene();

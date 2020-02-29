@@ -10,7 +10,7 @@ private:
     Uniform_Texture texture;
 
 public:
-    Plane(Vector point, Vector normal, float reflection_ratio = 0.18);
+    Plane(Surface_type type, Vector point, Vector normal, float reflection_ratio = 0.18);
     bool collide(Ray &ray);
     Vector get_normal(Vector &p) override;
     float get_texture();

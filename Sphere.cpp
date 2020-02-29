@@ -1,6 +1,6 @@
 #include "Sphere.hpp"
 
-Sphere::Sphere(Vector center, float radius, float reflection_ratio): center(center), radius(radius)
+Sphere::Sphere(Surface_type type, Vector center, float radius, float reflection_ratio): Object(type), center(center), radius(radius)
 {
     texture = Uniform_Texture(reflection_ratio);
 }

@@ -7,11 +7,18 @@ class Ray;
 
 class Object
 {
-protected:
-
 public:
-    Object() = default;
+    enum class Surface_type
+    {
+        diffuse,
+        reflection
+    };
+    Object(Surface_type type);
+    Surface_type get_surface_type();
     virtual bool collide(Ray &ray) = 0;
     virtual Vector get_normal(Vector &p) = 0;
     virtual float get_texture() = 0;
+    
+protected:
+    Surface_type type;
 };

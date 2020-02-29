@@ -5,17 +5,29 @@ Scene::Scene(std::vector<std::shared_ptr<Object>> objects, Camera camera, std::v
     pixels = std::vector<std::vector<Vector>>{width, std::vector<Vector>(height, 0)};
 }
 
-Vector Scene::cast_ray(Ray &ray)
+Vector Scene::cast_ray(Ray &ray, std::size_t depth)
 {
+    Vector color(0);
+    if (depth > 4)
+        return color;
     Vector total_light(0);
     if (trace(ray))
     {
         auto hit_point = ray.get_hit_point();
-        for (size_t i = 0; i < lights.size(); i++)
-            total_light += lights[i].illuminate(ray, hit_point);
-        return (ray.get_hit()->get_texture() / M_PI) * total_light;
+        if (ray.get_hit()->get_surface_type() == Object::Surface_type::reflection)
+        {
+            auto direction_reflection_ray = ray.get_direction() - 2 * ray.get_hit()->get_normal(hit_point) * ray.get_hit()->get_normal(hit_point).dot_product(ray.get_direction());
+            Ray reflect_ray(hit_point, direction_reflection_ray);
+            color = cast_ray(reflect_ray, depth + 1);
+        }
+        else if (ray.get_hit()->get_surface_type() == Object::Surface_type::diffuse)
+        {
+            for (size_t i = 0; i < lights.size(); i++)
+                total_light += lights[i].illuminate(ray, hit_point);
+            color = (ray.get_hit()->get_texture() / M_PI) * total_light;
+        }
     }
-    return Vector(0, 0, 0);
+    return color;
 }
 
 bool Scene::trace(Ray &ray)
@@ -66,7 +78,7 @@ void Scene::render()
             float x = (2 * (j + 0.5) / width - 1); 
             float y = (1 - 2 * (i + 0.5) / height);
             Ray r = camera.create_ray(x, y);
-            pixels[j][i] = cast_ray(r);
+            pixels[j][i] = cast_ray(r, 1);
         }
     }
 }

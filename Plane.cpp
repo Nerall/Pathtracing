@@ -1,6 +1,6 @@
 #include "Plane.hpp"
 
-Plane::Plane(Vector point, Vector normal, float reflection_ratio): point(point), normal(normal)
+Plane::Plane(Surface_type type, Vector point, Vector normal, float reflection_ratio):Object(type), point(point), normal(normal)
 {
     texture = Uniform_Texture(reflection_ratio);
 }

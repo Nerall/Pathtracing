@@ -15,7 +15,7 @@ private:
     Uniform_Texture texture;
 
 public:
-    Sphere(Vector center, float radius, float reflection_ratio = 0.18);
+    Sphere(Surface_type type, Vector center, float radius, float reflection_ratio = 0.18);
     bool collide(Ray &ray) override;
     Vector get_normal(Vector &p) override;
     float get_texture() override;

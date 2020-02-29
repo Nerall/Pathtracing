@@ -1,9 +1,9 @@
 #include "Object.hpp"
 
-Object::Object(Vector color): color(color)
+Object::Object(Surface_type type): type(type)
 {}
 
-Vector Object::get_color()
+Object::Surface_type Object::get_surface_type()
 {
-    return color;
+    return type;
 }
