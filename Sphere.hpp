@@ -12,10 +12,9 @@ class Sphere: public Object
 private:
     Vector center;
     float radius;
-    Uniform_Texture texture;
 
 public:
-    Sphere(Surface_type type, Vector center, float radius, float reflection_ratio = 0.18);
+    Sphere(Surface_type type, float diffuse_ratio, float refraction_index, Vector center, float radius);
     bool collide(Ray &ray) override;
     Vector get_normal(Vector &p) override;
     float get_texture() override;

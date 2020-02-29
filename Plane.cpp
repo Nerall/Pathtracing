@@ -1,8 +1,7 @@
 #include "Plane.hpp"
 
-Plane::Plane(Surface_type type, Vector point, Vector normal, float reflection_ratio):Object(type), point(point), normal(normal)
+Plane::Plane(Surface_type type, float diffuse_ratio, float refraction_index, Vector point, Vector normal):Object(type, diffuse_ratio, refraction_index), point(point), normal(normal)
 {
-    texture = Uniform_Texture(reflection_ratio);
 }
 
 bool Plane::collide(Ray &ray)
@@ -27,5 +26,5 @@ Vector Plane::get_normal(Vector &p)
 
 float Plane::get_texture()
 {
-    return texture.get_reflection_ratio();
+    return diffuse_ratio;
 }

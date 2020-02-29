@@ -16,10 +16,10 @@ int main()
 {
     float aspect_ratio = 1920 / 1080;
     Camera camera(Vector(0, 0.5, 0), Vector(0, 0.4, -2), Vector(0, 1, 0), 45, aspect_ratio);
-    Sphere sphere(Object::Surface_type::diffuse, Vector(0, 0.4, -2), 0.4);
+    Sphere sphere(Object::Surface_type::reflection, 0.18, 0, Vector(0, 0.4, -2), 0.4);
     //Sphere sphere2(Vector(-0.5, 0.1, -1.5), 0.4);
-    Plane plane_back(Object::Surface_type::diffuse, Vector(0, 0, -3), Vector(0, 0, 1));
-    Plane plane_bottom(Object::Surface_type::diffuse, Vector(0, 0, -2), Vector(0, 1, 0));
+    Plane plane_back(Object::Surface_type::diffuse, 0.18, 0, Vector(0, 0, -3), Vector(0, 0, 1));
+    Plane plane_bottom(Object::Surface_type::diffuse, 0.18, 0, Vector(0, 0, -2), Vector(0, 1, 0));
     std::shared_ptr<Object> sphere_ptr = std::make_shared<Sphere>(sphere);
     //std::shared_ptr<Object> sphere_ptr2 = std::make_shared<Sphere>(sphere2);
     std::shared_ptr<Object> plane_ptr_back = std::make_shared<Plane>(plane_back);

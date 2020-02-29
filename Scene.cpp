@@ -26,6 +26,25 @@ Vector Scene::cast_ray(Ray &ray, std::size_t depth)
                 total_light += lights[i].illuminate(ray, hit_point);
             color = (ray.get_hit()->get_texture() / M_PI) * total_light;
         }
+        else if (ray.get_hit()->get_surface_type() == Object::Surface_type::refraction)
+        {
+            float refraction_index = 0;
+            float refraction_angle = 0;
+            Vector refracted_ray(0);
+            float incident_angle = std::clamp(ray.get_hit()->get_normal(hit_point).dot_product(ray.get_direction()), -1.f, 1.f);
+            if (incident_angle < 0)
+            {
+                refraction_index = 1 / ray.get_hit()->get_refraction_index();
+                refraction_angle = sqrt(1 - pow(refraction_index, 2) * (1 - pow(incident_angle * -1, 2)));
+                refracted_ray = refraction_index * ray.get_direction() + (refraction_index * incident_angle * -1 - refraction_angle) * ray.get_hit()->get_normal(hit_point);
+            }
+            else
+            {
+                refraction_index = ray.get_hit()->get_refraction_index();
+                refraction_angle = sqrt(1 - pow(refraction_index, 2) * (1 - pow(incident_angle, 2)));
+                refracted_ray = refraction_index * ray.get_direction() + (refraction_index * incident_angle - refraction_angle) * ray.get_hit()->get_normal(hit_point) * -1;
+            }
+        }
     }
     return color;
 }

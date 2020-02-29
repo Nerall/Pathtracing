@@ -7,10 +7,9 @@ class Plane: public Object
 private:
     Vector point;
     Vector normal;
-    Uniform_Texture texture;
 
 public:
-    Plane(Surface_type type, Vector point, Vector normal, float reflection_ratio = 0.18);
+    Plane(Surface_type type, float diffuse_ratio, float refraction_index, Vector point, Vector normal);
     bool collide(Ray &ray);
     Vector get_normal(Vector &p) override;
     float get_texture();

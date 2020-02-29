@@ -1,8 +1,7 @@
 #include "Sphere.hpp"
 
-Sphere::Sphere(Surface_type type, Vector center, float radius, float reflection_ratio): Object(type), center(center), radius(radius)
+Sphere::Sphere(Surface_type type, float diffuse_ratio, float refraction_index, Vector center, float radius): Object(type, diffuse_ratio, refraction_index), center(center), radius(radius)
 {
-    texture = Uniform_Texture(reflection_ratio);
 }
 
 bool Sphere::collide(Ray &ray)
@@ -39,5 +38,5 @@ Vector Sphere::get_normal(Vector &p)
 
 float Sphere::get_texture()
 {
-    return texture.get_reflection_ratio();
+    return diffuse_ratio;
 }

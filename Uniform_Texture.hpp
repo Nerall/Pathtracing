@@ -8,7 +8,7 @@ private:
     /* data */
 public:
     Uniform_Texture();
-    Uniform_Texture(float reflection_ratio);
-    float get_reflection_ratio() override;
+    Uniform_Texture(float diffuse_ratio);
+    float get_diffuse_ratio() override;
     ~Uniform_Texture();
 };
