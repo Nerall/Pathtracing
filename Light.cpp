@@ -1,9 +1,14 @@
 #include "Light.hpp"
 
-Light::Light(Vector location, std::vector<Vector> rays): location(location), rays(rays)
+Light::Light(Vector color, float intensity): color(color), intensity(intensity)
+{}
+
+Vector Light::get_color()
 {
+    return color;
 }
 
-Light::~Light()
+float Light::get_intensity()
 {
+    return intensity;
 }

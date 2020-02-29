@@ -2,20 +2,25 @@
 
 #include "Vector.hpp"
 #include "Object.hpp"
+#include "Ray.hpp"
 #include <memory>
 
 class Camera
 {
 private:
     Vector center;
-    Vector height;
+    Vector direction;
+    Vector right;
+    Vector up;
+    float h;
+    float w;
     float fov;
 
 public:
-    Camera(Vector center, float fov);
+    Camera(Vector center, Vector object_location, Vector up_hint, float fov, float aspect_ratio);
     Vector get_origin();
-    float get_fov();
-    
+    Ray create_ray(float x, float y);
+
     ~Camera();
 };
 

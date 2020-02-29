@@ -1,18 +1,17 @@
 #pragma once
 
 #include "Vector.hpp"
-#include "Ray.hpp"
 #include "Uniform_Texture.hpp"
+
+class Ray;
 
 class Object
 {
 protected:
-    Vector color;
 
 public:
-    Object(Vector color);
-    Vector get_color();
+    Object();
     virtual bool collide(Ray &ray) = 0;
+    virtual Vector get_normal(Vector &p) = 0;
+    virtual float get_texture() = 0;
 };
-
-

@@ -5,12 +5,14 @@
 
 class Light
 {
-private:
-    Vector location;
-    std::vector<Vector> rays;
+protected:
+    Vector color;
+    float intensity;
 
 public:
-    Light(Vector location, std::vector<Vector> rays);
+    Light(Vector color, float intensity);
+    Vector get_color();
+    float get_intensity();
     virtual ~Light() = 0;
 };
 

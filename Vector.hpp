@@ -15,21 +15,20 @@ public:
     Vector();
     Vector(float x, float y, float z);
     Vector(float f);
-    Vector(Vector const &v);
-    float magnitude();
-    Vector unit_vector();
     Vector operator+(Vector const &rhs);
+    Vector& operator+=(Vector const &rhs);
     Vector operator-(Vector const &rhs);
-    Vector operator*(float scalar);
     float dot_product(Vector const &rhs);
     Vector cross_product(Vector const &rhs);
     float norm();
     Vector normalize();
     float get_x();
     float get_y();
+    void set_y(float y);
     float get_z();
     ~Vector();
     friend std::ostream& operator<<(std::ostream& os, const Vector& v);
+    friend Vector operator*(float scalar, Vector const& rhs);
+    friend Vector operator*(Vector const& lhs, float scalar);
+    friend Vector operator/(Vector const& lhs, float scalar);
 };
-
-
