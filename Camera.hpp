@@ -21,7 +21,6 @@ public:
     Vector get_origin();
     Ray create_ray(float x, float y);
 
-    ~Camera();
 };
 
 

@@ -22,10 +22,10 @@ bool Plane::collide(Ray &ray)
 
 Vector Plane::get_normal(Vector &p)
 {
-    return normal.normalize();
+    return (normal - p + p).normalize();
 }
 
 float Plane::get_texture()
 {
-    texture.get_reflection_ratio();
+    return texture.get_reflection_ratio();
 }

@@ -14,5 +14,4 @@ public:
     bool collide(Ray &ray);
     Vector get_normal(Vector &p) override;
     float get_texture();
-    ~Plane();
 };
