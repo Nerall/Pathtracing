@@ -7,12 +7,12 @@ Scene::Scene(std::vector<std::shared_ptr<Object>> objects, Camera camera, std::v
 
 Vector Scene::cast_ray(Ray &ray)
 {
-    auto hit_point = ray.get_hit_point();
-    Vector total_light;
+    Vector total_light(0);
     if (trace(ray))
     {
+        auto hit_point = ray.get_hit_point();
         for (size_t i = 0; i < lights.size(); i++)
-            total_light += lights[i].get_illumination(hit_point);
+            total_light += lights[i].illuminate(ray, hit_point);
         return (ray.get_hit()->get_texture() / M_PI) * total_light;
     }
     return Vector(0, 0, 0);
@@ -20,14 +20,14 @@ Vector Scene::cast_ray(Ray &ray)
 
 bool Scene::trace(Ray &ray)
 {
-    for (auto it = objects.begin(); it != objects.end(); it++)
+    for (std::size_t i = 0; i < objects.size(); i++)
     {
-        if ((*it)->collide(ray))
+        if (objects[i]->collide(ray))
         {
             if (ray.get_t_distance() < ray.get_nearest())
             {
                 ray.set_nearest(ray.get_t_distance());
-                ray.set_hit(*it);
+                ray.set_hit(objects[i]);
             }
         }
     }
@@ -48,9 +48,9 @@ void Scene::save_image()
     {
         for (size_t j = 0; j < width; j++)
         {
-            char r = (char)pixels[i][j].get_x(); 
-            char g = (char)pixels[i][j].get_y(); 
-            char b = (char)pixels[i][j].get_z(); 
+            char r = (char)pixels[j][i].get_x(); 
+            char g = (char)pixels[j][i].get_y(); 
+            char b = (char)pixels[j][i].get_z(); 
             ofs << r << g << b;
         }
     }
@@ -63,11 +63,10 @@ void Scene::render()
     {
         for (size_t j = 0; j < width; j++)
         {
-            float x = (2 * (i + 0.5) / width - 1); 
-            float y = (1 - 2 * (j + 0.5) / height);
-            Vector v(x, y, -1);
+            float x = (2 * (j + 0.5) / width - 1); 
+            float y = (1 - 2 * (i + 0.5) / height);
             Ray r = camera.create_ray(x, y);
-            pixels[i][j] = cast_ray(r);
+            pixels[j][i] = cast_ray(r);
         }
     }
 }

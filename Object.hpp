@@ -10,7 +10,7 @@ class Object
 protected:
 
 public:
-    Object();
+    Object() = default;
     virtual bool collide(Ray &ray) = 0;
     virtual Vector get_normal(Vector &p) = 0;
     virtual float get_texture() = 0;

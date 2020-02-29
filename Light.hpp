@@ -13,7 +13,6 @@ public:
     Light(Vector color, float intensity);
     Vector get_color();
     float get_intensity();
-    virtual ~Light() = 0;
 };
 
 

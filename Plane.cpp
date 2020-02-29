@@ -7,14 +7,14 @@ Plane::Plane(Vector point, Vector normal, float reflection_ratio): point(point),
 
 bool Plane::collide(Ray &ray)
 {
-    auto denom = ray.get_direction().dot_product(normal);
-    if (denom < 1e-8)
+    float denom = ray.get_direction().dot_product(normal);
+    if (std::abs(denom) < 1e-8)
         return false;
     auto num = (point - ray.get_origin()).dot_product(normal);
     auto res = num / denom;
-    if (res > 0)
+    if (res >= 1e-8)
     {
-        ray.set_t_distance(num / denom);
+        ray.set_t_distance(res);
         return true;
     }
     return false;

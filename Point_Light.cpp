@@ -28,7 +28,3 @@ Vector Point_Light::get_location()
 {
     return location;
 }
-
-Point_Light::~Point_Light()
-{
-}

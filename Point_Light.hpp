@@ -15,5 +15,4 @@ public:
     Vector illuminate(Ray &ray, Vector &hit_point);
     Vector get_illumination(Vector &hit_point);
     Vector get_location();
-    ~Point_Light();
 };
