@@ -1,7 +1,13 @@
 #include "Sphere.hpp"
 
-Sphere::Sphere(Surface_type type, float diffuse_ratio, float refraction_index, Vector center, float radius): Object(type, diffuse_ratio, refraction_index), center(center), radius(radius)
+Sphere::Sphere(Surface_type type, float diffuse_ratio, Vector center, float radius): Object(type), center(center), radius(radius)
 {
+    material = std::make_shared<Diffuse_texture>(diffuse_ratio);
+}
+
+Sphere::Sphere(Surface_type type, float refraction_index, Vector center, float radius): Object(type), center(center), radius(radius)
+{
+    material = std::make_shared<Refracted_reflected_texture>(refraction_index);
 }
 
 bool Sphere::collide(Ray &ray)
@@ -36,7 +42,7 @@ Vector Sphere::get_normal(Vector &p)
     return (p - center).normalize();
 }
 
-float Sphere::get_texture()
+std::shared_ptr<Texture_Material> Sphere::get_texture()
 {
-    return diffuse_ratio;
+    return material;
 }

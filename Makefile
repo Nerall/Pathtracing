@@ -2,7 +2,7 @@ CXX = g++-9
 CXXFLAGS = -Wall -Werror -Wextra -pedantic -std=c++17 -g -fsanitize=address
 LDFLAGS =  -fsanitize=address
 
-SRC = main.cpp Camera.cpp Light.cpp Plane.cpp Point_Light.cpp Ray.cpp Scene.cpp Sphere.cpp Texture_Material.cpp Uniform_Texture.cpp Vector.cpp Object.cpp
+SRC = main.cpp Camera.cpp Light.cpp Plane.cpp Point_Light.cpp Ray.cpp Scene.cpp Sphere.cpp Texture_Material.cpp Diffuse_texture.cpp Vector.cpp Object.cpp
 OBJ = $(SRC:.cpp=.o)
 EXEC = main
 

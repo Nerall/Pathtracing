@@ -24,7 +24,7 @@ Vector Scene::cast_ray(Ray &ray, std::size_t depth)
         {
             for (size_t i = 0; i < lights.size(); i++)
                 total_light += lights[i].illuminate(ray, hit_point);
-            color = (ray.get_hit()->get_texture() / M_PI) * total_light;
+            color = (ray.get_hit()->get_texture()->get_diffuse_ratio() / M_PI) * total_light;
         }
         else if (ray.get_hit()->get_surface_type() == Object::Surface_type::refraction)
         {
@@ -44,6 +44,19 @@ Vector Scene::cast_ray(Ray &ray, std::size_t depth)
                 refraction_angle = sqrt(1 - pow(refraction_index, 2) * (1 - pow(incident_angle, 2)));
                 refracted_ray = refraction_index * ray.get_direction() + (refraction_index * incident_angle - refraction_angle) * ray.get_hit()->get_normal(hit_point) * -1;
             }
+        }
+        else if (ray.get_hit()->get_surface_type() == Object::Surface_type::reflection_refraction)
+        {
+            
+            float fresnel_ratio = ray.get_hit()->get_texture()->get_fresnel_ratio(ray, hit_point);
+            if (fresnel_ratio < 1)
+            {
+                Ray refracted_ray = ray.get_hit()->get_texture()->create_refraction_ray(ray, hit_point);
+                Vector refraction_color = cast_ray(refracted_ray, depth + 1);
+            }
+            Ray reflected_ray = ray.get_hit()->get_texture()->create_reflection_ray(ray, hit_point);
+            Vector reflection_color = cast_ray(reflected_ray, depth + 1);
+            color = fresnel_ratio * reflection_color + (1 - fresnel_ratio) * reflection_color;
         }
     }
     return color;

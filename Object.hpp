@@ -1,7 +1,8 @@
 #pragma once
 
 #include "Vector.hpp"
-#include "Uniform_Texture.hpp"
+#include "Texture_Material.hpp"
+#include <memory>
 
 class Ray;
 
@@ -12,19 +13,16 @@ public:
     {
         diffuse,
         reflection,
-        refraction
+        refraction,
+        reflection_refraction
     };
-    Object(Surface_type type, float diffuse_ratio, float refraction_index);
+    Object(Surface_type type);
     Surface_type get_surface_type();
-    float get_diffuse_ratio();
-    float get_refraction_index();
-    void set_refraction_index(float refraction_index);
     virtual bool collide(Ray &ray) = 0;
     virtual Vector get_normal(Vector &p) = 0;
-    virtual float get_texture() = 0;
+    virtual std::shared_ptr<Texture_Material> get_texture() = 0;
     
 protected:
     Surface_type type;
-    float diffuse_ratio;
-    float refraction_index;
+    std::shared_ptr<Texture_Material> material;
 };
