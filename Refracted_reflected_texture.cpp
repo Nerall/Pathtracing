@@ -74,7 +74,7 @@ float Refracted_reflected_texture::get_fresnel_ratio(Ray &ray, Vector &hit_point
     {
         float cos_refracted = sqrt(std::max(0.f, 1 - powf(sinus_refracted, 2)));
         cos_incident = fabsf(cos_incident);
-        float parallel_light = powf((leaving_refraction_ratio * cos_incident - coming_refraction_ratio * cos_refracted) / (leaving_refraction_ratio * cos_incident + coming_refraction_ratio * cos_refracted), 2);
+        float parallel_light = powf((coming_refraction_ratio * cos_incident - leaving_refraction_ratio * cos_refracted) / (coming_refraction_ratio * cos_incident + leaving_refraction_ratio * cos_refracted), 2);
         float perpendicular_light = powf((coming_refraction_ratio * cos_refracted - leaving_refraction_ratio * cos_incident) / (coming_refraction_ratio * cos_refracted + leaving_refraction_ratio * cos_incident), 2);
         return (perpendicular_light + parallel_light) / 2;
     }
