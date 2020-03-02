@@ -1,13 +1,11 @@
 #include "Plane.hpp"
 
-Plane::Plane(Surface_type type, float diffuse_ratio, Vector point, Vector normal): Object(type)
+Plane::Plane(Surface_type type, Vector point, Vector normal, std::shared_ptr<Diffuse_texture> texture): Object(type, texture), point(point), normal(normal)
 {
-    material = std::make_shared<Diffuse_texture>(diffuse_ratio);
 }
 
-Plane::Plane(Surface_type type, float refraction_index, Vector point, Vector normal): Object(type)
+Plane::Plane(Surface_type type, Vector point, Vector normal, std::shared_ptr<Refracted_reflected_texture> texture): Object(type, texture), point(point), normal(normal)
 {
-    material = std::make_shared<Refracted_reflected_texture>(refraction_index);
 }
 
 bool Plane::collide(Ray &ray)

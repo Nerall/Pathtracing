@@ -4,15 +4,22 @@ Refracted_reflected_texture::Refracted_reflected_texture(float refraction_ratio)
 {
 }
 
-Vector Refracted_reflected_texture::get_reflection_direction(Ray &ray, Vector hit_point)
+Ray Refracted_reflected_texture::reflection_case(std::shared_ptr<Refracted_reflected_texture> refracted_reflected_texture, Ray &ray, Vector &hit_point)
+{
+    Vector reflected_direction = refracted_reflected_texture->get_reflection_direction(ray, hit_point);
+    Ray reflected_ray(hit_point, reflected_direction);
+    return reflected_ray;
+}
+
+Vector Refracted_reflected_texture::get_reflection_direction(Ray &ray, Vector &hit_point)
 {
     return (ray.get_direction() - 2 * ray.get_hit()->get_normal(hit_point) * ray.get_hit()->get_normal(hit_point).dot_product(ray.get_direction())).normalize();
 }
 
-Ray Refracted_reflected_texture::create_refraction_ray(Ray &ray, Vector hit_point)
+Ray Refracted_reflected_texture::create_refraction_ray(std::shared_ptr<Refracted_reflected_texture> texture, Ray &ray, Vector &hit_point)
 {
     float cos_incident = ray.get_direction().dot_product(ray.get_hit()->get_normal(hit_point));
-    Vector refraction_direction = ray.get_hit()->get_texture()->get_refraction_direction(ray, hit_point);
+    Vector refraction_direction = texture->get_refraction_direction(ray, hit_point);
     Vector refracted_origin(0);
     if (cos_incident < 0)
         refracted_origin = hit_point - 0.5;
@@ -22,10 +29,10 @@ Ray Refracted_reflected_texture::create_refraction_ray(Ray &ray, Vector hit_poin
     return refracted_ray;
 }
 
-Ray Refracted_reflected_texture::create_reflection_ray(Ray &ray, Vector hit_point)
+Ray Refracted_reflected_texture::create_reflection_ray(std::shared_ptr<Refracted_reflected_texture> texture, Ray &ray, Vector &hit_point)
 {
     float cos_incident = ray.get_direction().dot_product(ray.get_hit()->get_normal(hit_point));
-    Vector reflection_direction = ray.get_hit()->get_texture()->get_reflection_direction(ray, hit_point);
+    Vector reflection_direction = texture->get_reflection_direction(ray, hit_point);
     Vector reflected_origin(0);
     if (cos_incident < 0)
         reflected_origin = hit_point + 0.5;
@@ -35,7 +42,7 @@ Ray Refracted_reflected_texture::create_reflection_ray(Ray &ray, Vector hit_poin
     return reflected_ray;
 }
 
-Vector Refracted_reflected_texture::get_refraction_direction(Ray &ray, Vector hit_point)
+Vector Refracted_reflected_texture::get_refraction_direction(Ray &ray, Vector &hit_point)
 {
     float cos_incident = std::clamp(ray.get_hit()->get_normal(hit_point).dot_product(ray.get_direction()), -1.f, 1.f);
     float coming_refraction_ratio = 1;

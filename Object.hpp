@@ -16,7 +16,7 @@ public:
         refraction,
         reflection_refraction
     };
-    Object(Surface_type type);
+    Object(Surface_type type, std::shared_ptr<Texture_Material> material);
     Surface_type get_surface_type();
     virtual bool collide(Ray &ray) = 0;
     virtual Vector get_normal(Vector &p) = 0;

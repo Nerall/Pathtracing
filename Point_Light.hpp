@@ -3,6 +3,7 @@
 #include "Light.hpp"
 #include "Ray.hpp"
 
+
 class Point_Light: public Light
 {
 private:

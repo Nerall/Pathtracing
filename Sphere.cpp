@@ -1,13 +1,11 @@
 #include "Sphere.hpp"
 
-Sphere::Sphere(Surface_type type, float diffuse_ratio, Vector center, float radius): Object(type), center(center), radius(radius)
+Sphere::Sphere(Surface_type type, std::shared_ptr<Diffuse_texture> texture, Vector center, float radius): Object(type, texture), center(center), radius(radius)
 {
-    material = std::make_shared<Diffuse_texture>(diffuse_ratio);
 }
 
-Sphere::Sphere(Surface_type type, float refraction_index, Vector center, float radius): Object(type), center(center), radius(radius)
+Sphere::Sphere(Surface_type type, std::shared_ptr<Refracted_reflected_texture> texture, Vector center, float radius): Object(type, texture), center(center), radius(radius)
 {
-    material = std::make_shared<Refracted_reflected_texture>(refraction_index);
 }
 
 bool Sphere::collide(Ray &ray)
