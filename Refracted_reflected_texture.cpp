@@ -19,12 +19,12 @@ Vector Refracted_reflected_texture::get_reflection_direction(Ray &ray, Vector &h
 Ray Refracted_reflected_texture::create_refraction_ray(std::shared_ptr<Refracted_reflected_texture> texture, Ray &ray, Vector &hit_point)
 {
     float cos_incident = ray.get_direction().dot_product(ray.get_hit()->get_normal(hit_point));
-    Vector refraction_direction = texture->get_refraction_direction(ray, hit_point);
+    Vector refraction_direction = texture->get_refraction_direction(ray, hit_point).normalize();
     Vector refracted_origin(0);
     if (cos_incident < 0)
-        refracted_origin = hit_point - 0.5;
+        refracted_origin = hit_point - 0.095 * ray.get_hit()->get_normal(hit_point);
     else
-        refracted_origin = hit_point + 0.5;
+        refracted_origin = hit_point + 0.095 * ray.get_hit()->get_normal(hit_point);
     Ray refracted_ray(refracted_origin, refraction_direction);
     return refracted_ray;
 }
@@ -35,9 +35,9 @@ Ray Refracted_reflected_texture::create_reflection_ray(std::shared_ptr<Refracted
     Vector reflection_direction = texture->get_reflection_direction(ray, hit_point);
     Vector reflected_origin(0);
     if (cos_incident < 0)
-        reflected_origin = hit_point + 0.5;
+        reflected_origin = hit_point + 0.5 * ray.get_hit()->get_normal(hit_point);
     else
-        reflected_origin = hit_point - 0.5;
+        reflected_origin = hit_point - 0.5 * ray.get_hit()->get_normal(hit_point);
     Ray reflected_ray(reflected_origin, reflection_direction);
     return reflected_ray;
 }
@@ -52,11 +52,13 @@ Vector Refracted_reflected_texture::get_refraction_direction(Ray &ray, Vector &h
     else
         std::swap(coming_refraction_ratio, leaving_refraction_ratio);
     float refraction_index = coming_refraction_ratio / leaving_refraction_ratio;
-    float cos_refracted = 1 - powf(refraction_index, 2) * (1 - powf(cos_incident, 2));
-    if (cos_refracted < 0)
+    float cos_refracted2 = 1 - (powf(refraction_index, 2) * (1 - powf(cos_incident, 2)));
+    if (cos_refracted2 < 0)
         return Vector(0);
     else
-        return (refraction_index * ray.get_direction() + (refraction_index * cos_incident - sqrtf(cos_refracted)) * -1 * ray.get_hit()->get_normal(hit_point)).normalize();
+    {
+        return (refraction_index * ray.get_direction() + (refraction_index * cos_incident - sqrtf(cos_refracted2)) * (ray.get_hit()->get_normal(hit_point) * -1)).normalize();
+    }
 }
 
 float Refracted_reflected_texture::get_fresnel_ratio(Ray &ray, Vector &hit_point)

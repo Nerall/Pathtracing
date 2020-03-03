@@ -16,6 +16,23 @@ Vector::Vector(float f)
     this->z = f;
 }
 
+Vector Vector::operator*(std::vector<Vector> const &rhs)
+{
+    Vector res(0);
+    res.x = this->x *rhs[0].x + this->y *rhs[0].y + this->z *rhs[0].z;
+    res.y = this->x *rhs[1].x + this->y *rhs[1].y + this->z *rhs[1].z;
+    res.z = this->x *rhs[2].x + this->y *rhs[2].y + this->z *rhs[2].z;
+    return res;
+}
+
+Vector Vector::adjust()
+{
+    this->x = std::clamp(this->x, 0.f, 255.f);
+    this->y = std::clamp(this->y, 0.f, 255.f);
+    this->z = std::clamp(this->z, 0.f, 255.f);
+    return *this;
+}
+
 Vector Vector::operator+(Vector const &rhs)
 {
     return Vector(this->x + rhs.x, this->y + rhs.y, this->z + rhs.z);

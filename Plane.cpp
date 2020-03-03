@@ -8,6 +8,11 @@ Plane::Plane(Surface_type type, Vector point, Vector normal, std::shared_ptr<Ref
 {
 }
 
+Plane::Plane(Surface_type type, Vector point, Vector normal, std::shared_ptr<Diffuse_specular> texture): Object(type, texture), point(point), normal(normal)
+{
+
+}
+
 bool Plane::collide(Ray &ray)
 {
     float denom = ray.get_direction().dot_product(normal);

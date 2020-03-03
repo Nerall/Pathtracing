@@ -8,6 +8,11 @@ Sphere::Sphere(Surface_type type, std::shared_ptr<Refracted_reflected_texture> t
 {
 }
 
+Sphere::Sphere(Surface_type type, std::shared_ptr<Diffuse_specular> texture, Vector center, float radius): Object(type, texture), center(center), radius(radius)
+{
+
+}
+
 bool Sphere::collide(Ray &ray)
 {
     auto k = ray.get_origin() - center;

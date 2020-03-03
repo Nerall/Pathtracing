@@ -2,6 +2,8 @@
 
 #include <cmath>
 #include <iostream>
+#include <algorithm>
+#include <vector>
 #include "Color.hpp"
 
 class Vector
@@ -16,6 +18,7 @@ public:
     Vector(float x, float y, float z);
     Vector(float f);
     Vector operator+(Vector const &rhs);
+    Vector operator*(std::vector<Vector> const &rhs);
     Vector& operator+=(Vector const &rhs);
     Vector operator-(Vector const &rhs);
     float dot_product(Vector const &rhs);
@@ -26,6 +29,7 @@ public:
     float get_y();
     void set_y(float y);
     float get_z();
+    Vector adjust();
     ~Vector();
     friend std::ostream& operator<<(std::ostream& os, const Vector& v);
     friend Vector operator*(float scalar, Vector const& rhs);

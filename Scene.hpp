@@ -10,7 +10,6 @@
 #include "Image.hpp"
 #include "Vector.hpp"
 #include "Point_Light.hpp"
-#include "Distant_light.hpp"
 #include <limits>
 
 class Scene
@@ -30,5 +29,6 @@ public:
     Vector cast_ray(Ray &ray, std::size_t depth);
     void save_image();
     void render();
+    std::vector<Vector> create_new_coordinate_system(Ray &ray, Vector &hit_point);
     ~Scene();
 };

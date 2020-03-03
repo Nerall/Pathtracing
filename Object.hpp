@@ -14,7 +14,9 @@ public:
         diffuse,
         reflection,
         refraction,
-        reflection_refraction
+        reflection_refraction,
+        diffuse_specular,
+        path_tracing
     };
     Object(Surface_type type, std::shared_ptr<Texture_Material> material);
     Surface_type get_surface_type();
