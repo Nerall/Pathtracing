@@ -19,7 +19,7 @@ Vector Diffuse_specular::get_color_light(Point_Light &light, Ray &ray, Vector &h
 {
     Vector diffuse_component = (diffuse_ratio / M_PI) * light.illuminate(ray, hit_point);
     Vector reflection_direction = get_reflection_direction(ray, hit_point, light);
-    Vector specular_component = powf(std::max(0.f, reflection_direction.dot_product(ray.get_direction() * -1)), exponent) * light.get_illumination(hit_point);
+    Vector specular_component = powf(std::max(0.f, reflection_direction.dot_product(ray.get_direction() * -1)), exponent) * light.get_illumination(ray, hit_point);
     return diffuse_component * diffuse_weight + specular_component * specular_weight;
 }
 

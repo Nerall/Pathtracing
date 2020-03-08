@@ -20,8 +20,10 @@ public:
     Vector operator+(Vector const &rhs);
     Vector operator*(std::vector<Vector> const &rhs);
     Vector& operator+=(Vector const &rhs);
+    Vector& operator/=(float const &rhs);
     Vector operator-(Vector const &rhs);
     float dot_product(Vector const &rhs);
+    float max_component();
     Vector cross_product(Vector const &rhs);
     float norm();
     Vector normalize();

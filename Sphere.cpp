@@ -1,17 +1,16 @@
 #include "Sphere.hpp"
 
-Sphere::Sphere(Surface_type type, std::shared_ptr<Diffuse_texture> texture, Vector center, float radius): Object(type, texture), center(center), radius(radius)
-{
-}
+Sphere::Sphere(Surface_type type, std::shared_ptr<Diffuse_texture> texture, Vector center, float radius, Vector color): Object(type, texture, color), center(center), radius(radius)
+{}
 
-Sphere::Sphere(Surface_type type, std::shared_ptr<Refracted_reflected_texture> texture, Vector center, float radius): Object(type, texture), center(center), radius(radius)
-{
-}
+Sphere::Sphere(Surface_type type, std::shared_ptr<Refracted_reflected_texture> texture, Vector center, float radius, Vector color): Object(type, texture, color), center(center), radius(radius)
+{}
 
-Sphere::Sphere(Surface_type type, std::shared_ptr<Diffuse_specular> texture, Vector center, float radius): Object(type, texture), center(center), radius(radius)
-{
+Sphere::Sphere(Surface_type type, std::shared_ptr<Diffuse_specular> texture, Vector center, float radius, Vector color): Object(type, texture, color), center(center), radius(radius)
+{}
 
-}
+Sphere::Sphere(Surface_type type, std::shared_ptr<Path_tracing_texture> texture, Vector center, float radius, Vector color): Object(type, texture, color), center(center), radius(radius)
+{}
 
 bool Sphere::collide(Ray &ray)
 {

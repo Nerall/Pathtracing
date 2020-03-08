@@ -7,12 +7,14 @@ Scene::Scene(std::vector<std::shared_ptr<Object>> objects, Camera camera, std::v
 
 Vector Scene::cast_ray(Ray &ray, std::size_t depth)
 {
+    std::default_random_engine generator;
+    std::uniform_real_distribution<float> generate(0, 1);
     Vector color(0);
-    if (depth > 9)
-        return color;
     Vector total_light(0);
     if (trace(ray))
     {
+        if (depth > 9)
+            return color;
         auto refracted_reflected_texture = std::static_pointer_cast<Refracted_reflected_texture>(ray.get_hit()->get_texture());
         auto diffuse_texture = std::static_pointer_cast<Diffuse_texture>(ray.get_hit()->get_texture());
         auto diffuse_specular_texture = std::static_pointer_cast<Diffuse_specular>(ray.get_hit()->get_texture());
@@ -61,13 +63,46 @@ Vector Scene::cast_ray(Ray &ray, std::size_t depth)
             Vector reflection_color = cast_ray(reflected_ray, depth + 1);
             color = fresnel_ratio * reflection_color + (1 - fresnel_ratio) * refraction_color;
         }
-        else if (ray.get_hit()->get_surface_type() == Object::Surface_type::path_tracing)
+        else if (ray.get_hit()->get_surface_type() == Object::Surface_type::path_tracing_texture)
         {
-
+            Vector indirect_component(0);
+            Vector direct_component(0);
+            for (size_t i = 0; i < lights.size(); i++)
+            {
+                Ray shadow_ray(hit_point + ray.get_hit()->get_normal(hit_point) * 0.1, lights[i].get_direction(hit_point) * -1);
+                if (trace(shadow_ray) && lights[i].get_direction(hit_point).norm() > (hit_point - shadow_ray.get_hit_point()).norm())
+                    continue;
+                direct_component += lights[i].illuminate(ray, hit_point);
+            }
+            std::size_t number_of_rays = 3;
+            auto transformation_matrix = create_transformation_matrix(ray, hit_point);
+            for (size_t i = 0; i < number_of_rays; i++)
+            {
+                float n1 = generate(generator);
+                float n2 = generate(generator);
+                Vector direction_world_coordinate = get_random_direction(n1, n2);
+                Vector direction_point_coordinate = direction_world_coordinate * transformation_matrix;
+                Ray new_ray(hit_point + 0 * direction_point_coordinate, direction_point_coordinate);
+                indirect_component += (n1 * cast_ray(new_ray, depth + 1)) / (1 / (2 * M_PI));
+            }
+            indirect_component /= number_of_rays;
+            color = (indirect_component + direct_component) * diffuse_texture->get_diffuse_ratio();
         }
     }
+    else
+        return Vector(1);
     return color.adjust();
 }
+
+Vector Scene::get_random_direction(float n1, float n2)
+{
+    float sinTheta = sqrtf(1 - powf(n1, 2)); 
+    float phi = 2 * M_PI * n2; 
+    float x = sinTheta * cosf(phi); 
+    float z = sinTheta * sinf(phi); 
+    return Vector(x, n1, z); 
+}
+
 
 bool Scene::trace(Ray &ray)
 {
@@ -99,9 +134,9 @@ void Scene::save_image()
     {
         for (size_t j = 0; j < width; j++)
         {
-            char r = (char)pixels[j][i].get_x(); 
-            char g = (char)pixels[j][i].get_y(); 
-            char b = (char)pixels[j][i].get_z(); 
+            char r = (char)(255 * pixels[j][i].get_x()); 
+            char g = (char)(255 * pixels[j][i].get_y()); 
+            char b = (char)(255 * pixels[j][i].get_z()); 
             ofs << r << g << b;
         }
     }
@@ -122,7 +157,7 @@ void Scene::render()
     }
 }
 
-std::vector<Vector> Scene::create_new_coordinate_system(Ray &ray, Vector &hit_point)
+std::vector<Vector> Scene::create_transformation_matrix(Ray &ray, Vector &hit_point)
 {
     Vector new_x;
     if (std::fabs(ray.get_hit()->get_normal(hit_point).get_x()) > std::fabs(ray.get_hit()->get_normal(hit_point).get_y()))

@@ -16,6 +16,14 @@ Vector::Vector(float f)
     this->z = f;
 }
 
+Vector& Vector::operator/=(float const &rhs)
+{
+    this->x /= rhs;
+    this->y /= rhs;
+    this->z /= rhs;
+    return *this;
+}
+
 Vector Vector::operator*(std::vector<Vector> const &rhs)
 {
     Vector res(0);
@@ -25,11 +33,16 @@ Vector Vector::operator*(std::vector<Vector> const &rhs)
     return res;
 }
 
+float Vector:: max_component()
+{
+    return std::max(this->x, std::max(this->y, this->z));
+}
+
 Vector Vector::adjust()
 {
-    this->x = std::clamp(this->x, 0.f, 255.f);
-    this->y = std::clamp(this->y, 0.f, 255.f);
-    this->z = std::clamp(this->z, 0.f, 255.f);
+    this->x = std::clamp(this->x, 0.f, 1.f);
+    this->y = std::clamp(this->y, 0.f, 1.f);
+    this->z = std::clamp(this->z, 0.f, 1.f);
     return *this;
 }
 

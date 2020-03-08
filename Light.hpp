@@ -6,12 +6,10 @@
 class Light
 {
 protected:
-    Vector color;
     float intensity;
 
 public:
-    Light(Vector color, float intensity);
-    Vector get_color();
+    Light(float intensity);
     float get_intensity();
 };
 

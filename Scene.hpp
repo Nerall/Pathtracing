@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <memory>
+#include <random>
 #include <algorithm>
 #include "Object.hpp"
 #include "Sphere.hpp"
@@ -29,6 +30,7 @@ public:
     Vector cast_ray(Ray &ray, std::size_t depth);
     void save_image();
     void render();
-    std::vector<Vector> create_new_coordinate_system(Ray &ray, Vector &hit_point);
+    Vector get_random_direction(float n1, float n2);
+    std::vector<Vector> create_transformation_matrix(Ray &ray, Vector &hit_point);
     ~Scene();
 };
