@@ -15,7 +15,7 @@
 int main()
 {
     float aspect_ratio = 1920 / 1080;
-    Camera camera(Vector(0, 1, 0), Vector(0, 0.4, -2), Vector(0, 1, 0), 45, aspect_ratio);
+    Camera camera(Vector(-0.2, 0.5, 0.5), Vector(0, 0.4, -2), Vector(0, 1, 0), 45, aspect_ratio);
     auto texture_plane_bottom = std::make_shared<Diffuse_texture>(0.18);
     auto texture_plane_back = std::make_shared<Diffuse_texture>(0.18);
     auto texture_sphere = std::make_shared<Diffuse_texture>(0.18);

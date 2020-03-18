@@ -22,6 +22,7 @@ public:
     Vector get_reflection_direction(Ray &ray, Vector &hit_point, Point_Light &light);
     float get_diffuse_ratio();
     Vector get_color_light(Point_Light &light, Ray &ray, Vector &hit_point);
+    Vector get_color_light_brdf(Point_Light &light, Ray &ray, Vector &hit_point);
     ~Diffuse_specular();
 };
 

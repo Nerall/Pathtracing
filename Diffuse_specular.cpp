@@ -23,6 +23,8 @@ Vector Diffuse_specular::get_color_light(Point_Light &light, Ray &ray, Vector &h
     return diffuse_component * diffuse_weight + specular_component * specular_weight;
 }
 
+
+
 std::size_t Diffuse_specular::get_exponent()
 {
     return exponent;

@@ -30,7 +30,9 @@ public:
     Vector cast_ray(Ray &ray, std::size_t depth);
     void save_image();
     void render();
-    Vector get_random_direction(float n1, float n2);
+    Vector get_random_direction_diffuse(float n1, float n2);
+    Vector get_random_direction_diffuse_v2(float n1, float n2);
+    Vector get_random_direction_specular(float n1, float n2);
     std::vector<Vector> create_transformation_matrix(Ray &ray, Vector &hit_point);
     ~Scene();
 };

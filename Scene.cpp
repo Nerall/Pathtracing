@@ -7,18 +7,65 @@ Scene::Scene(std::vector<std::shared_ptr<Object>> objects, Camera camera, std::v
 
 Vector Scene::cast_ray(Ray &ray, std::size_t depth)
 {
-    std::default_random_engine generator;
-    std::uniform_real_distribution<float> generate(0, 1);
+    static std::default_random_engine generator;
+    std::uniform_real_distribution<float> generate(0.f, 1.f);
     Vector color(0);
     Vector total_light(0);
     if (trace(ray))
     {
-        if (depth > 9)
+        if (depth > 2)
             return color;
         auto refracted_reflected_texture = std::static_pointer_cast<Refracted_reflected_texture>(ray.get_hit()->get_texture());
         auto diffuse_texture = std::static_pointer_cast<Diffuse_texture>(ray.get_hit()->get_texture());
         auto diffuse_specular_texture = std::static_pointer_cast<Diffuse_specular>(ray.get_hit()->get_texture());
+        auto path_tracing_texture = std::static_pointer_cast<Path_tracing_texture>(ray.get_hit()->get_texture());
         auto hit_point = ray.get_hit_point();
+        /*if (ray.get_hit()->get_surface_type() == Object::Surface_type::path_tracing_texture)
+        {
+            Vector indirect_component(0);
+            Vector direct_component(0);
+            for (size_t i = 0; i < lights.size(); i++)
+            {
+                Ray shadow_ray(hit_point + ray.get_hit()->get_normal(hit_point) * 0.1, lights[i].get_direction(hit_point) * -1);
+                if (!(trace(shadow_ray) && lights[i].get_direction(hit_point).norm() > (hit_point - shadow_ray.get_hit_point()).norm()))
+                    direct_component += path_tracing_texture->get_color_light_brdf(lights[i], ray, hit_point);
+                std::size_t number_of_rays = 2;
+                auto transformation_matrix = create_transformation_matrix(ray, hit_point);
+                float u = generate(generator);
+                if (u < path_tracing_texture->get_diffuse_weight())
+                {
+                    for (size_t i = 0; i < number_of_rays; i++)
+                    {
+                        float n1 = generate(generator);
+                        float n2 = generate(generator);
+                        Vector direction_world_coordinate = get_random_direction_diffuse_v2(sqrtf(n1), n2);
+                        Vector direction_point_coordinate = (direction_world_coordinate * transformation_matrix).normalize();
+                        Ray new_ray(hit_point + 0.1 * direction_point_coordinate, direction_point_coordinate);
+                        indirect_component += M_PI * cast_ray(new_ray, depth + 1);
+                    }
+                }
+                else
+                {
+                    Vector reflection_direction = path_tracing_texture->get_reflection_direction(ray, hit_point, lights[i]);
+                    float pdf = ((path_tracing_texture->get_exponent() + 1) / (2 * M_PI)) * (powf(std::max(std::numeric_limits<float>::min(), reflection_direction.dot_product(ray.get_direction() * -1)), path_tracing_texture->get_exponent()));
+                    std::cout << pdf << "\n";
+                    for (size_t i = 0; i < number_of_rays; i++)
+                    {
+                        float n1 = generate(generator);
+                        float n2 = generate(generator);
+                        Vector direction_world_coordinate = get_random_direction_specular(powf(n1, 1 / (path_tracing_texture->get_exponent() + 1)), n2);
+                        Vector direction_point_coordinate = (direction_world_coordinate * transformation_matrix).normalize();
+                        Ray new_ray(hit_point + 0.1 * direction_point_coordinate, direction_point_coordinate);
+                        float cos_theta = ray.get_hit()->get_normal(hit_point).dot_product(direction_point_coordinate);
+                        Vector ray_casted = cast_ray(new_ray, depth + 1);
+                        indirect_component += cos_theta * ray_casted / pdf;
+                    }
+                }
+                indirect_component /= number_of_rays;
+                color = (indirect_component + direct_component);
+            }
+        }*/
+
         if (ray.get_hit()->get_surface_type() == Object::Surface_type::reflection)
         {
             Ray reflected_ray = refracted_reflected_texture->reflection_case(refracted_reflected_texture, ray, hit_point);
@@ -74,19 +121,19 @@ Vector Scene::cast_ray(Ray &ray, std::size_t depth)
                     continue;
                 direct_component += lights[i].illuminate(ray, hit_point);
             }
-            std::size_t number_of_rays = 3;
+            std::size_t number_of_rays = 64;
             auto transformation_matrix = create_transformation_matrix(ray, hit_point);
             for (size_t i = 0; i < number_of_rays; i++)
             {
                 float n1 = generate(generator);
                 float n2 = generate(generator);
-                Vector direction_world_coordinate = get_random_direction(n1, n2);
+                Vector direction_world_coordinate = get_random_direction_diffuse(n1, n2);
                 Vector direction_point_coordinate = direction_world_coordinate * transformation_matrix;
-                Ray new_ray(hit_point + 0 * direction_point_coordinate, direction_point_coordinate);
-                indirect_component += (n1 * cast_ray(new_ray, depth + 1)) / (1 / (2 * M_PI));
+                Ray new_ray(hit_point + 0.1 * direction_point_coordinate, direction_point_coordinate);
+                indirect_component += n1 * cast_ray(new_ray, depth + 1);
             }
             indirect_component /= number_of_rays;
-            color = (indirect_component + direct_component) * diffuse_texture->get_diffuse_ratio();
+            color = ((2 * indirect_component) + (direct_component / M_PI)) * diffuse_texture->get_diffuse_ratio();
         }
     }
     else
@@ -94,15 +141,32 @@ Vector Scene::cast_ray(Ray &ray, std::size_t depth)
     return color.adjust();
 }
 
-Vector Scene::get_random_direction(float n1, float n2)
+Vector Scene::get_random_direction_diffuse(float n1, float n2)
 {
     float sinTheta = sqrtf(1 - powf(n1, 2)); 
     float phi = 2 * M_PI * n2; 
     float x = sinTheta * cosf(phi); 
     float z = sinTheta * sinf(phi); 
-    return Vector(x, n1, z); 
+    return Vector(x, n1, z).normalize(); 
 }
 
+Vector Scene::get_random_direction_diffuse_v2(float n1, float n2)
+{
+    float sinTheta = sqrtf(1 - powf(n1, 2)); 
+    float phi = 2 * M_PI * n2; 
+    float x = sinTheta * cosf(phi); 
+    float z = sinTheta * sinf(phi); 
+    return Vector(x, n1, z).normalize(); 
+}
+
+Vector Scene::get_random_direction_specular(float n1, float n2)
+{
+    float sinTheta = sqrtf(1 - powf(n1, 2)); 
+    float phi = 2 * M_PI * n2; 
+    float x = sinTheta * cosf(phi); 
+    float z = sinTheta * sinf(phi); 
+    return Vector(x, n1, z).normalize(); 
+}
 
 bool Scene::trace(Ray &ray)
 {
