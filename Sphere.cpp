@@ -6,7 +6,7 @@ Sphere::Sphere(Surface_type type, std::shared_ptr<Diffuse_texture> texture, Vect
 Sphere::Sphere(Surface_type type, std::shared_ptr<Refracted_reflected_texture> texture, Vector center, float radius, Vector color): Object(type, texture, color), center(center), radius(radius)
 {}
 
-Sphere::Sphere(Surface_type type, std::shared_ptr<Diffuse_specular> texture, Vector center, float radius, Vector color): Object(type, texture, color), center(center), radius(radius)
+Sphere::Sphere(Surface_type type, std::shared_ptr<Phong> texture, Vector center, float radius, Vector color): Object(type, texture, color), center(center), radius(radius)
 {}
 
 Sphere::Sphere(Surface_type type, std::shared_ptr<Path_tracing_texture> texture, Vector center, float radius, Vector color): Object(type, texture, color), center(center), radius(radius)

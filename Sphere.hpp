@@ -2,7 +2,7 @@
 
 #include "Object.hpp"
 #include "Diffuse_texture.hpp"
-#include "Diffuse_specular.hpp"
+#include "Phong.hpp"
 #include "Path_tracing_texture.hpp"
 #include "Refracted_reflected_texture.hpp"
 #include "Ray.hpp"
@@ -19,7 +19,7 @@ private:
 public:
     Sphere(Surface_type type, std::shared_ptr<Diffuse_texture> texture, Vector center, float radius, Vector color);
     Sphere(Surface_type type, std::shared_ptr<Refracted_reflected_texture> texture, Vector center, float radius, Vector color);
-    Sphere(Surface_type type, std::shared_ptr<Diffuse_specular> texture, Vector center, float radius, Vector color);
+    Sphere(Surface_type type, std::shared_ptr<Phong> texture, Vector center, float radius, Vector color);
     Sphere(Surface_type type, std::shared_ptr<Path_tracing_texture> texture, Vector center, float radius, Vector color);
     bool collide(Ray &ray) override;
     Vector get_normal(Vector &p) override;

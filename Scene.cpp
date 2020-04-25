@@ -13,11 +13,11 @@ Vector Scene::cast_ray(Ray &ray, std::size_t depth)
     Vector total_light(0);
     if (trace(ray))
     {
-        if (depth > 2)
-            return color;
+        if (depth > 5)
+            return Vector(0.0);
         auto refracted_reflected_texture = std::static_pointer_cast<Refracted_reflected_texture>(ray.get_hit()->get_texture());
         auto diffuse_texture = std::static_pointer_cast<Diffuse_texture>(ray.get_hit()->get_texture());
-        auto diffuse_specular_texture = std::static_pointer_cast<Diffuse_specular>(ray.get_hit()->get_texture());
+        auto phong_texture = std::static_pointer_cast<Phong>(ray.get_hit()->get_texture());
         auto path_tracing_texture = std::static_pointer_cast<Path_tracing_texture>(ray.get_hit()->get_texture());
         auto hit_point = ray.get_hit_point();
         /*if (ray.get_hit()->get_surface_type() == Object::Surface_type::path_tracing_texture)
@@ -65,70 +65,73 @@ Vector Scene::cast_ray(Ray &ray, std::size_t depth)
                 color = (indirect_component + direct_component);
             }
         }*/
-
-        if (ray.get_hit()->get_surface_type() == Object::Surface_type::reflection)
+        if (ray.get_hit()->get_surface_type() == Object::Surface_type::REFLECTION)
         {
             Ray reflected_ray = refracted_reflected_texture->reflection_case(refracted_reflected_texture, ray, hit_point);
-            color = cast_ray(reflected_ray, depth + 1);
+            color += cast_ray(reflected_ray, depth + 1);
         }
-        else if (ray.get_hit()->get_surface_type() == Object::Surface_type::diffuse)
+        else if (ray.get_hit()->get_surface_type() == Object::Surface_type::DIFFUSE)
         {
             for (size_t i = 0; i < lights.size(); i++)
             {
                 Ray shadow_ray(hit_point + ray.get_hit()->get_normal(hit_point) * 0.1, lights[i].get_direction(hit_point) * -1);
-                if (trace(shadow_ray) && lights[i].get_direction(hit_point).norm() > (hit_point - shadow_ray.get_hit_point()).norm())
+                if ((trace(shadow_ray) && shadow_ray.get_hit()->get_surface_type() != Object::Surface_type::REFRACTION && shadow_ray.get_hit()->get_surface_type() != Object::Surface_type::REFLECTION_REFRACTION) && lights[i].get_direction(hit_point).norm() > (hit_point - shadow_ray.get_hit_point()).norm())
                     continue;
                 total_light += lights[i].illuminate(ray, hit_point);
             }
             color = (diffuse_texture->get_diffuse_ratio() / M_PI) * total_light;
         }
-        else if (ray.get_hit()->get_surface_type() == Object::Surface_type::diffuse_specular)
+        else if (ray.get_hit()->get_surface_type() == Object::Surface_type::PHONG)
         {
             for (size_t i = 0; i < lights.size(); i++)
             {
                 Ray shadow_ray(hit_point + ray.get_hit()->get_normal(hit_point) * 0.1, lights[i].get_direction(hit_point) * -1);
-                if (trace(shadow_ray) && lights[i].get_direction(hit_point).norm() > (hit_point - shadow_ray.get_hit_point()).norm())
+                if ((trace(shadow_ray) && shadow_ray.get_hit()->get_surface_type() != Object::Surface_type::REFRACTION && shadow_ray.get_hit()->get_surface_type() != Object::Surface_type::REFLECTION_REFRACTION) && lights[i].get_direction(hit_point).norm() > (hit_point - shadow_ray.get_hit_point()).norm())
                     continue;
-                color += diffuse_specular_texture->get_color_light(lights[i], ray, hit_point);
+                color += phong_texture->get_color_light(lights[i], ray, hit_point);
             }
         }
-        else if (ray.get_hit()->get_surface_type() == Object::Surface_type::refraction)
+        else if (ray.get_hit()->get_surface_type() == Object::Surface_type::REFRACTION)
         {
             Ray refracted_ray = refracted_reflected_texture->create_refraction_ray(refracted_reflected_texture, ray, hit_point);
+            if (refracted_ray.get_direction() == 0)
+                color = Vector(0);
             color = cast_ray(refracted_ray, depth + 1);
         }
-        else if (ray.get_hit()->get_surface_type() == Object::Surface_type::reflection_refraction)
+        else if (ray.get_hit()->get_surface_type() == Object::Surface_type::REFLECTION_REFRACTION)
         {
             Vector refraction_color(0);
             float fresnel_ratio = refracted_reflected_texture->get_fresnel_ratio(ray, hit_point);
             if (fresnel_ratio < 1)
             {
                 Ray refracted_ray = refracted_reflected_texture->create_refraction_ray(refracted_reflected_texture, ray, hit_point);
-                Vector refraction_color = cast_ray(refracted_ray, depth + 1);
+                refraction_color = cast_ray(refracted_ray, depth + 1);
             }
             Ray reflected_ray = refracted_reflected_texture->create_reflection_ray(refracted_reflected_texture, ray, hit_point);
             Vector reflection_color = cast_ray(reflected_ray, depth + 1);
             color = fresnel_ratio * reflection_color + (1 - fresnel_ratio) * refraction_color;
         }
-        else if (ray.get_hit()->get_surface_type() == Object::Surface_type::path_tracing_texture)
+        else if (ray.get_hit()->get_surface_type() == Object::Surface_type::PATH_TRACING)
         {
             Vector indirect_component(0);
             Vector direct_component(0);
+            //Phong phongTexture(10, 0.8, 0.18);
             for (size_t i = 0; i < lights.size(); i++)
             {
                 Ray shadow_ray(hit_point + ray.get_hit()->get_normal(hit_point) * 0.1, lights[i].get_direction(hit_point) * -1);
-                if (trace(shadow_ray) && lights[i].get_direction(hit_point).norm() > (hit_point - shadow_ray.get_hit_point()).norm())
+                if ((trace(shadow_ray) && shadow_ray.get_hit()->get_surface_type() != Object::Surface_type::REFRACTION && shadow_ray.get_hit()->get_surface_type() != Object::Surface_type::REFLECTION_REFRACTION) && lights[i].get_direction(hit_point).norm() > (hit_point - shadow_ray.get_hit_point()).norm())
                     continue;
+                //direct_component += phongTexture.get_color_light(lights[i], ray, hit_point);
                 direct_component += lights[i].illuminate(ray, hit_point);
             }
-            std::size_t number_of_rays = 64;
+            std::size_t number_of_rays = 3;
             auto transformation_matrix = create_transformation_matrix(ray, hit_point);
             for (size_t i = 0; i < number_of_rays; i++)
             {
                 float n1 = generate(generator);
                 float n2 = generate(generator);
                 Vector direction_world_coordinate = get_random_direction_diffuse(n1, n2);
-                Vector direction_point_coordinate = direction_world_coordinate * transformation_matrix;
+                Vector direction_point_coordinate = transformation_matrix * direction_world_coordinate;
                 Ray new_ray(hit_point + 0.1 * direction_point_coordinate, direction_point_coordinate);
                 indirect_component += n1 * cast_ray(new_ray, depth + 1);
             }
@@ -137,7 +140,7 @@ Vector Scene::cast_ray(Ray &ray, std::size_t depth)
         }
     }
     else
-        return Vector(1);
+        return Vector(0.0);
     return color.adjust();
 }
 

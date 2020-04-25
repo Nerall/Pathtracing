@@ -120,6 +120,36 @@ Vector operator*(Vector const& lhs, float scalar)
     return Vector(scalar * lhs.x, scalar * lhs.y, scalar * lhs.z);
 }
 
+Vector operator*(std::vector<Vector> const &lhs, const Vector& rhs)
+{
+    Vector res(0);
+    res.x = lhs[0].x * rhs.x + lhs[1].x * rhs.y + lhs[2].x * rhs.z;
+    res.y = lhs[0].y * rhs.x + lhs[1].y * rhs.y + lhs[2].y * rhs.z;
+    res.z = lhs[0].z * rhs.x + lhs[1].z * rhs.y + lhs[2].z * rhs.z;
+    return res;
+}
+
+bool operator==(Vector const &left, float right)
+{
+    return (left.x == right && left.y == right && left.z == right);
+}
+
+Vector& Vector::operator*=(float rhs)
+{
+    x *= rhs;
+    y *= rhs;
+    z *= rhs;
+    return *this;
+}
+
+/*Vector operator+(Vector lhs, Vector const& rhs)
+{
+    lhs.x += rhs.x;
+    lhs.y += rhs.y;
+    lhs.z += rhs.z;
+    return lhs;
+}*/
+
 Vector operator/(Vector const& lhs, float scalar)
 {
     return Vector(lhs.x / scalar, lhs.y / scalar, lhs.z / scalar);

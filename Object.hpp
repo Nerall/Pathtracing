@@ -11,12 +11,12 @@ class Object
 public:
     enum class Surface_type
     {
-        diffuse,
-        reflection,
-        refraction,
-        reflection_refraction,
-        diffuse_specular,
-        path_tracing_texture
+        DIFFUSE,
+        REFLECTION,
+        REFRACTION,
+        REFLECTION_REFRACTION,
+        PHONG,
+        PATH_TRACING,
     };
     Object(Surface_type type, std::shared_ptr<Texture_Material> material, Vector &color);
     Surface_type get_surface_type();

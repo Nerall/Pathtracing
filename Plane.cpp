@@ -8,7 +8,7 @@ Plane::Plane(Surface_type type, Vector point, Vector normal, std::shared_ptr<Ref
 {
 }
 
-Plane::Plane(Surface_type type, Vector point, Vector normal, std::shared_ptr<Diffuse_specular> texture, Vector color): Object(type, texture, color), point(point), normal(normal)
+Plane::Plane(Surface_type type, Vector point, Vector normal, std::shared_ptr<Phong> texture, Vector color): Object(type, texture, color), point(point), normal(normal)
 {
 }
 
