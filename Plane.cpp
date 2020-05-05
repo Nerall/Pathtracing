@@ -31,7 +31,7 @@ bool Plane::collide(Ray &ray)
     return false;
 }
 
-Vector Plane::get_normal(Vector &p)
+Vector Plane::get_normal(Vector const& p)
 {
     return (normal - p + p).normalize();
 }

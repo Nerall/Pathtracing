@@ -39,7 +39,7 @@ bool Sphere::collide(Ray &ray)
     return true;
 }
 
-Vector Sphere::get_normal(Vector &p)
+Vector Sphere::get_normal(Vector const& p)
 {
     return (p - center).normalize();
 }

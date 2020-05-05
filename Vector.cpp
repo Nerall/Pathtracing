@@ -59,12 +59,27 @@ Vector& Vector::operator+=(Vector const &rhs)
     return *this;
 }
 
+Vector Vector::operator+(Vector const &rhs) const
+{
+    return Vector(this->x + rhs.x, this->y + rhs.y, this->z + rhs.z);
+}
+
 Vector Vector::operator-(Vector const &rhs)
 {
     return Vector(this->x - rhs.x, this->y - rhs.y, this->z - rhs.z);
 }
 
+Vector Vector::operator-(Vector const &rhs) const
+{
+    return Vector(this->x - rhs.x, this->y - rhs.y, this->z - rhs.z);
+}
+
 float Vector::dot_product(Vector const &rhs)
+{
+    return x * rhs.x + y * rhs.y + z * rhs.z;
+}
+
+float Vector::dot_product(Vector const &rhs) const
 {
     return x * rhs.x + y * rhs.y + z * rhs.z;
 }
@@ -79,7 +94,17 @@ float Vector::norm()
     return sqrt(this->dot_product(*this));
 }
 
+float Vector::norm() const
+{
+    return sqrt(this->dot_product(*this));
+}
+
 Vector Vector::normalize()
+{
+    return (*this)*(1/norm());
+}
+
+Vector Vector::normalize() const
 {
     return (*this)*(1/norm());
 }
@@ -87,6 +112,16 @@ Vector Vector::normalize()
 float Vector::get_x()
 {
     return x;
+}
+
+float Vector::get_y() const
+{
+    return y;
+}
+
+float Vector::get_z() const
+{
+    return z;
 }
 
 float Vector::get_y()
@@ -104,7 +139,21 @@ float Vector::get_z()
     return z;
 }
 
+
+float Vector::get_x() const
+{
+    return x;
+}
 Vector::~Vector(){}
+
+Vector operator*(Vector const& lhs, Vector const& rhs) 
+{
+    Vector res;
+    res.x = lhs.get_x() * rhs.get_x();
+    res.y = lhs.get_y() * rhs.get_y();
+    res.z = lhs.get_z() * rhs.get_z();
+    return res;
+}
 
 std::ostream& operator<<(std::ostream& os, const Vector& v)
 {

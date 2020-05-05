@@ -22,7 +22,7 @@ public:
     Surface_type get_surface_type();
     Vector get_color();
     virtual bool collide(Ray &ray) = 0;
-    virtual Vector get_normal(Vector &p) = 0;
+    virtual Vector get_normal(Vector const& p) = 0;
     virtual std::shared_ptr<Texture_Material> get_texture() = 0;
     
 protected:

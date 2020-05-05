@@ -22,6 +22,6 @@ public:
     Sphere(Surface_type type, std::shared_ptr<Phong> texture, Vector center, float radius, Vector color);
     Sphere(Surface_type type, std::shared_ptr<Path_tracing_texture> texture, Vector center, float radius, Vector color);
     bool collide(Ray &ray) override;
-    Vector get_normal(Vector &p) override;
+    Vector get_normal(Vector const& p);
     std::shared_ptr<Texture_Material> get_texture() override;
 };

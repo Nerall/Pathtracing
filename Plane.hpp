@@ -18,6 +18,6 @@ public:
     Plane(Surface_type type, Vector point, Vector normal, std::shared_ptr<Phong> texture, Vector color);
     Plane(Surface_type type, Vector point, Vector normal, std::shared_ptr<Path_tracing_texture> texture, Vector color);
     bool collide(Ray &ray) override;
-    Vector get_normal(Vector &p) override;
+    Vector get_normal(Vector const& p) override;
     std::shared_ptr<Texture_Material> get_texture() override;
 };

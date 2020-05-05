@@ -23,6 +23,14 @@ Vector Phong::get_color_light(Point_Light &light, Ray &ray, Vector &hit_point)
     return diffuse_component * diffuse_weight + specular_component * specular_weight;
 }
 
+Vector Phong::get_color_light(Distant_light const& light, Ray const& ray, Vector const& hit_point) 
+{
+    Vector specular_component;
+    Vector diffuse_component = (diffuse_ratio / M_PI) * light.illuminate(ray, hit_point);
+    Vector reflection_direction = get_reflection_direction(ray, hit_point, light);
+    specular_component = powf(std::max(0.f, reflection_direction.dot_product(ray.get_direction() * -1)), exponent) * light.get_illumination(ray.get_hit()->get_color());
+    return diffuse_component * diffuse_weight + specular_component * specular_weight;
+}
 
 
 std::size_t Phong::get_exponent()
@@ -38,6 +46,11 @@ float Phong::get_diffuse_ratio()
 Vector Phong::get_reflection_direction(Ray &ray, Vector &hit_point, Point_Light &light)
 {
     return (light.get_direction(hit_point) - 2 * ray.get_hit()->get_normal(hit_point) * ray.get_hit()->get_normal(hit_point).dot_product(light.get_direction(hit_point))).normalize();
+}
+
+Vector Phong::get_reflection_direction(Ray const& ray, Vector const& hit_point, Distant_light const& light) 
+{
+    return (light.get_direction() - 2 * ray.get_hit()->get_normal(hit_point) * ray.get_hit()->get_normal(hit_point).dot_product(light.get_direction())).normalize();
 }
 
 Phong::~Phong()

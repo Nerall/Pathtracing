@@ -2,6 +2,7 @@
 
 #include "Vector.hpp"
 #include <vector>
+#include "Ray.hpp"
 
 class Light
 {
@@ -10,7 +11,7 @@ protected:
 
 public:
     Light(float intensity);
-    float get_intensity();
+    virtual Vector illuminate(Ray const& ray, Vector const& hit_point) = 0;
 };
 
 
